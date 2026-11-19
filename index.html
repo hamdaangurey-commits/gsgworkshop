@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#061434">
+  <meta name="description" content="HAMDAN PERSONAL OS — personal finance dashboard for Mr Hamdan.">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title>HAMDAN PERSONAL OS</title>
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="wp-blue">
+
+  <!-- ============ LOGIN / WELCOME ============ -->
+  <section id="login" class="login" aria-label="Login">
+    <div class="wall" aria-hidden="true">
+      <span class="orb o1"></span><span class="orb o2"></span><span class="orb o3"></span>
+    </div>
+    <div class="login-card" id="loginCard">
+      <div class="logo-mark" aria-hidden="true">H</div>
+      <p class="eyebrow">HAMDAN PERSONAL OS</p>
+      <h1 class="welcome">Soo dhawoow<br><span>Mr Hamdan</span></h1>
+      <form id="loginForm" class="login-form" autocomplete="on" novalidate>
+        <label class="lfield">
+          <span>Username</span>
+          <input id="lu" name="username" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="Enter username" required>
+        </label>
+        <label class="lfield">
+          <span>Password</span>
+          <div class="pw">
+            <input id="lp" name="password" type="password" inputmode="numeric" autocomplete="current-password" placeholder="••••" required>
+            <button type="button" id="pwToggle" class="pw-toggle" aria-label="Show password"></button>
+          </div>
+        </label>
+        <label class="check"><input type="checkbox" id="remember" checked> <span>Keep me signed in</span></label>
+        <p id="loginErr" class="login-err" role="alert"></p>
+        <button class="btn primary block lg" type="submit">Login</button>
+      </form>
+      <div class="wp-switch" role="group" aria-label="Welcome wallpaper">
+        <span>Wallpaper</span>
+        <button type="button" data-wp="blue" class="wp-chip"><i class="sw sw-blue"></i>Blue 💙</button>
+        <button type="button" data-wp="light" class="wp-chip"><i class="sw sw-light"></i>Light Blue</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ AFTER-LOGIN SPLASH ============ -->
+  <div id="splash" class="splash" hidden>
+    <div class="splash-inner">
+      <div class="logo-mark big" aria-hidden="true">H</div>
+      <h2>Waad bilaawi kartaa xisaabta</h2>
+      <p>HAMdan · Personal OS</p>
+    </div>
+  </div>
+
+  <!-- ============ APP ============ -->
+  <div id="app" class="app" hidden>
+    <aside id="sidebar" class="sidebar" aria-label="Main navigation">
+      <div class="brand">
+        <div class="logo-mark sm" aria-hidden="true">H</div>
+        <div><strong>HAMdan</strong><small>Personal OS</small></div>
+      </div>
+      <nav id="nav" class="nav"></nav>
+      <button class="nav-item logout" id="logoutBtn" type="button"></button>
+    </aside>
+    <div class="scrim" id="scrim"></div>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="icon-btn only-mobile" id="menuBtn" type="button" aria-label="Open menu"></button>
+        <div class="top-title">
+          <span class="top-brand">HAMdan</span>
+          <h2 id="pageTitle">Dashboard</h2>
+        </div>
+        <button class="avatar sm" id="topAvatar" type="button" aria-label="Profile photo"></button>
+      </header>
+      <div id="view" class="view"></div>
+    </main>
+
+    <nav class="bottombar" id="bottombar" aria-label="Quick navigation"></nav>
+    <button class="fab" id="fab" type="button" aria-label="Add"></button>
+  </div>
+
+  <!-- ============ MODAL ============ -->
+  <div id="modal" class="modal" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <header class="modal-head">
+        <h3 id="modalTitle"></h3>
+        <button class="icon-btn" type="button" data-close aria-label="Close" id="modalX"></button>
+      </header>
+      <div id="modalBody" class="modal-body"></div>
+    </div>
+  </div>
+
+  <div id="toasts" class="toasts" aria-live="polite"></div>
+  <div id="print-area"></div>
+
+  <input type="file" id="photoInput" accept="image/*" hidden>
+  <input type="file" id="importInput" accept="application/json,.json" hidden>
+
+  <script src="app.js"></script>
+</body>
+</html>
