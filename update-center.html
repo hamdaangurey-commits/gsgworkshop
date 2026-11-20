@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#061434">
+  <meta name="description" content="GSG release review and backup control center">
+  <title>GSG AI UPDATE CENTER</title>
+  <style>
+    :root{color-scheme:dark;--bg:#040b1c;--panel:#0b1b3d;--line:rgba(126,174,255,.18);--blue:#2f7bff;--sky:#5cc8ff;--text:#eaf2ff;--muted:#91a8d0;--green:#34d399;--amber:#fbbf24;--red:#fb7185}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(900px 500px at 100% 0,rgba(47,123,255,.2),transparent 60%),linear-gradient(180deg,#071331,var(--bg));color:var(--text);font:15px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+    main{width:min(1050px,100%);margin:auto;padding:24px 16px 60px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:22px}
+    a,.btn{color:var(--sky);text-decoration:none}.btn{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:9px 14px;border-radius:12px;border:1px solid var(--line);background:#10265a;color:var(--text);font-weight:700;cursor:pointer}
+    .hero,.card{background:rgba(11,27,61,.9);border:1px solid var(--line);border-radius:20px;padding:20px;margin:14px 0;box-shadow:0 18px 50px rgba(0,0,0,.18)}
+    .eyebrow{color:var(--sky);font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase}.hero h1{font-size:clamp(25px,5vw,38px);line-height:1.1;margin:8px 0}.muted,p{color:var(--muted)}h2{font-size:18px;margin:0 0 12px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+    .status{padding:14px;border:1px solid var(--line);border-radius:14px;background:rgba(4,11,28,.45);min-width:0}.status strong{display:block;margin:4px 0;overflow-wrap:anywhere}.small{font-size:12px;color:var(--muted)}.ok{color:var(--green)}.bad{color:var(--red)}.wait{color:var(--amber)}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.notice{border-left:3px solid var(--amber);padding:10px 13px;background:rgba(251,191,36,.08);border-radius:8px;color:#fde68a}
+    .steps{display:grid;gap:12px;counter-reset:step}.step{padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:rgba(4,11,28,.35)}.step b{color:var(--sky)}
+    .history{padding:10px 0;border-bottom:1px solid var(--line);overflow-wrap:anywhere}.tag{display:inline-block;padding:3px 8px;border:1px solid var(--line);border-radius:20px;font-size:11px;color:var(--muted)}
+    button:disabled{opacity:.45;cursor:not-allowed}footer{margin-top:22px;color:var(--muted);font-size:12px}code{color:#b9dcff;overflow-wrap:anywhere}
+  </style>
+</head>
+<body>
+<main>
+  <div class="top"><a href="index.html">← Back to HAMDAN PERSONAL OS</a><span class="eyebrow">GSG WORKSHOP · CONTROL CENTER</span></div>
+  <section class="hero">
+    <div class="eyebrow">Protected release workflow</div>
+    <h1>GSG AI UPDATE CENTER</h1>
+    <p>GitHub review, deployment checks and a separate browser-data backup. This page does not change your finance records.</p>
+    <div class="notice"><b>Approval rule:</b> no production release is approved by this page. Review the exact GitHub changes and preview first. Only your deliberate GitHub merge action can approve the code change. Do not merge until you are ready.</div>
+  </section>
+
+  <section class="card">
+    <h2>Live system checks</h2>
+    <div class="grid">
+      <div class="status"><span class="small">GitHub pull request #1</span><strong id="prState" class="wait">Checking…</strong><span class="small" id="prDetail">GSG AI Update Center</span></div>
+      <div class="status"><span class="small">GitHub quality checks</span><strong id="checksState" class="wait">Checking…</strong><span class="small" id="checksDetail">Commit status and deploy preview checks</span></div>
+      <div class="status"><span class="small">Current website host</span><strong id="siteState" class="wait">Checking…</strong><span class="small" id="siteDetail">Checking this page's host</span></div>
+      <div class="status"><span class="small">Browser finance backup</span><strong id="dataState" class="wait">Checking…</strong><span class="small" id="dataDetail">Local key: hamdan_os_v1</span></div>
+    </div>
+    <div class="actions">
+      <button class="btn" id="refresh" type="button">Refresh checks</button>
+      <button class="btn" id="backup" type="button">Download finance backup</button>
+      <a class="btn" href="https://github.com/hamdaangurey-commits/gsgworkshop/pull/1" target="_blank" rel="noopener">Open GitHub review</a>
+      <a class="btn" href="https://github.com/hamdaangurey-commits/gsgworkshop/pull/1/files" target="_blank" rel="noopener">Review changed files</a>
+    </div>
+    <div id="checkList" style="margin-top:12px"></div>
+  </section>
+
+  <section class="card">
+    <h2>How every update is approved</h2>
+    <div class="steps">
+      <div class="step"><b>1 · Prepare</b><p>A proposed code change is committed to a separate GitHub branch. The live <code>main</code> branch stays untouched.</p></div>
+      <div class="step"><b>2 · Test</b><p>GitHub Actions checks JavaScript syntax and confirms the existing finance-data key is still present. Netlify may provide a separate preview if deploy previews are enabled.</p></div>
+      <div class="step"><b>3 · Review</b><p>Open <b>Files changed</b>, inspect the preview and make a finance-data backup. A green check alone is not permission to release.</p></div>
+      <div class="step"><b>4 · ACCEPT</b><p>Only after you explicitly approve the exact change should you merge that pull request. Never share access tokens or passwords in chat.</p></div>
+      <div class="step"><b>5 · Deploy and verify</b><p>If Netlify is connected to this GitHub repository with production deploys from <code>main</code>, the merge may trigger production deployment. Verify the live site afterwards.</p></div>
+      <div class="step"><b>6 · Roll back if needed</b><p>Use Netlify's Deploys history to publish a previously successful deploy. This restores website files, not finance data stored on a phone. Restore finance data only from a verified JSON backup.</p></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Connection and automation limits</h2>
+    <div class="grid">
+      <div class="status"><span class="small">GitHub</span><strong class="ok">Read-only status connected</strong><p class="small">This page reads public PR and commit status information. Code writes are handled separately through the connected GitHub workflow.</p></div>
+      <div class="status"><span class="small">Netlify</span><strong class="wait">Deployment API not connected</strong><p class="small">No Netlify token is available to this static page. Deploy, rollback and deployment history must remain in Netlify until a protected server-side connection is configured.</p></div>
+      <div class="status"><span class="small">AI engine</span><strong class="wait">No private AI endpoint configured</strong><p class="small">Do not put an AI API key in browser JavaScript. AI-generated code must be reviewed and tested in a separate branch.</p></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Finance data protection</h2>
+    <p>Your finance data is saved in this browser under <code>hamdan_os_v1</code>. This backup is separate from GitHub and Netlify. It downloads a JSON file and does not upload your transactions anywhere.</p>
+    <p class="small">Important: importing a backup into HAMDAN PERSONAL OS replaces the current browser data. Keep the newest backup safe and never import an unfamiliar file.</p>
+    <div class="actions"><button class="btn" id="backup2" type="button">Download JSON backup</button></div>
+  </section>
+  <footer>HAMDAN PERSONAL OS · GSG AI UPDATE CENTER · No finance data is sent to GitHub or Netlify by this page.</footer>
+</main>
+<script>
+(() => {
+  'use strict';
+  const DATA_KEY = 'hamdan_os_v1';
+  const REPO = 'hamdaangurey-commits/gsgworkshop';
+  const PR_NUMBER = 1;
+  const $ = id => document.getElementById(id);
+  if (localStorage.getItem('hamdan_os_session') !== '1' && sessionStorage.getItem('hamdan_os_session') !== '1') {
+    location.replace('index.html'); return;
+  }
+  function setState(id, detailId, title, detail, cls) {
+    $(id).textContent = title;
+    $(id).className = cls || '';
+    $(detailId).textContent = detail || '';
+  }
+  async function getJson(url) {
+    const response = await fetch(url, {headers:{Accept:'application/vnd.github+json'},cache:'no-store'});
+    if (!response.ok) throw new Error('HTTP ' + response.status);
+    return response.json();
+  }
+  async function checks() {
+    setState('prState','prDetail','Checking…','GitHub pull request #' + PR_NUMBER,'wait');
+    setState('checksState','checksDetail','Checking…','GitHub commit statuses','wait');
+    setState('siteState','siteDetail','Checking…','Checking current host','wait');
+    $('checkList').textContent = '';
+    const tasks = [
+      (async () => {
+        const pr = await getJson('https://api.github.com/repos/' + REPO + '/pulls/' + PR_NUMBER);
+        let state = pr.merged ? 'Merged' : (pr.draft ? 'Draft · review needed' : 'Open · review needed');
+        setState('prState','prDetail',state,'Updated ' + new Date(pr.updated_at).toLocaleString() + ' · ' + String(pr.head.sha).slice(0,7),pr.merged?'ok':'wait');
+        const results = await Promise.all([
+          getJson('https://api.github.com/repos/' + REPO + '/commits/' + pr.head.sha + '/status').catch(() => ({statuses:[],state:'pending'})),
+          getJson('https://api.github.com/repos/' + REPO + '/commits/' + pr.head.sha + '/check-runs').catch(() => ({check_runs:[]}))
+        ]);
+        const statusRows = Array.isArray(results[0].statuses) ? results[0].statuses : [];
+        const checkRows = Array.isArray(results[1].check_runs) ? results[1].check_runs : [];
+        const allRows = statusRows.map(x => ({name:x.context || 'Commit status',state:x.state,detail:x.description || '',url:x.target_url || ''}))
+          .concat(checkRows.map(x => ({name:x.name || 'GitHub Action',state:x.conclusion || x.status,detail:(x.output && (x.output.title || x.output.summary)) || x.status || '',url:x.html_url || ''})));
+        if (!allRows.length) {
+          setState('checksState','checksDetail','No checks reported','No GitHub Actions or Netlify preview checks found for this commit.','wait');
+        } else {
+          const bad = allRows.some(x => ['failure','error','cancelled','timed_out','action_required'].includes(x.state));
+          const pending = allRows.some(x => ['pending','queued','in_progress'].includes(x.state));
+          setState('checksState','checksDetail',bad?'A check failed':pending?'Checks pending':'Reported checks passed',allRows.length + ' check item(s) · ' + (results[0].state || 'GitHub Actions'),bad?'bad':pending?'wait':'ok');
+          const list = document.createElement('div');
+          allRows.forEach(item => {
+            const line = document.createElement('div'); line.className='history';
+            const title = document.createElement('b'); title.textContent = item.name + ' · ' + item.state;
+            const detail = document.createElement('div'); detail.className='small'; detail.textContent = item.detail;
+            line.append(title,detail);
+            if (item.url) { const link=document.createElement('a'); link.href=item.url; link.target='_blank'; link.rel='noopener'; link.textContent='Open check'; line.append(document.createTextNode(' '),link); }
+            list.append(line);
+          });
+          $('checkList').append(list);
+        }
+      })().catch(e => {
+        setState('prState','prDetail','Could not read PR',e.message,'bad');
+        setState('checksState','checksDetail','Not verified','GitHub status unavailable','bad');
+      }),
+      fetch('./',{cache:'no-store'}).then(r => {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        setState('siteState','siteDetail','This host responds','HTTP ' + r.status + ' · This is not a Netlify deploy-history check.','ok');
+      }).catch(e => setState('siteState','siteDetail','Could not verify',e.message,'bad'))
+    ];
+    const raw = localStorage.getItem(DATA_KEY);
+    try {
+      if (!raw) throw new Error('No saved finance data found in this browser');
+      const data = JSON.parse(raw);
+      if (!data || typeof data !== 'object') throw new Error('Saved data format is invalid');
+      const transactions = Array.isArray(data.transactions) ? data.transactions.length : 0;
+      const accounts = Array.isArray(data.accounts) ? data.accounts.length : 0;
+      setState('dataState','dataDetail','Backup available',transactions + ' transactions · ' + accounts + ' accounts · download stays on this device','ok');
+    } catch(e) {
+      setState('dataState','dataDetail','Backup check needed',e.message,'bad');
+    }
+    await Promise.allSettled(tasks);
+  }
+  function downloadBackup() {
+    const raw = localStorage.getItem(DATA_KEY);
+    if (!raw) { alert('No HAMDAN finance data found in this browser.'); return; }
+    let data;
+    try { data = JSON.parse(raw); } catch { alert('Saved data is not valid JSON.'); return; }
+    if (!data || typeof data !== 'object' || !Array.isArray(data.accounts) || !Array.isArray(data.transactions)) {
+      alert('The saved data does not match the HAMDAN backup format. No file was exported.'); return;
+    }
+    const payload = {app:'HAMDAN PERSONAL OS',exportedAt:new Date().toISOString(),data};
+    const blob = new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+    const url = URL.createObjectURL(blob), a = document.createElement('a');
+    a.href = url; a.download = 'hamdan-os-backup-' + new Date().toISOString().slice(0,10) + '.json';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url),1500);
+  }
+  $('refresh').addEventListener('click',checks);
+  $('backup').addEventListener('click',downloadBackup);
+  $('backup2').addEventListener('click',downloadBackup);
+  checks();
+})();
+</script>
+</body>
+</html>
