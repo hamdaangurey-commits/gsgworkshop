@@ -106,21 +106,27 @@
         const pr = await getJson('https://api.github.com/repos/' + REPO + '/pulls/' + PR_NUMBER);
         let state = pr.merged ? 'Merged' : (pr.draft ? 'Draft · review needed' : 'Open · review needed');
         setState('prState','prDetail',state,'Updated ' + new Date(pr.updated_at).toLocaleString() + ' · ' + String(pr.head.sha).slice(0,7),pr.merged?'ok':'wait');
-        const status = await getJson('https://api.github.com/repos/' + REPO + '/commits/' + pr.head.sha + '/status');
-        const rows = Array.isArray(status.statuses) ? status.statuses : [];
-        if (!rows.length) {
-          setState('checksState','checksDetail','No checks reported','No GitHub status or Netlify preview status found for this commit.','wait');
+        const results = await Promise.all([
+          getJson('https://api.github.com/repos/' + REPO + '/commits/' + pr.head.sha + '/status').catch(() => ({statuses:[],state:'pending'})),
+          getJson('https://api.github.com/repos/' + REPO + '/commits/' + pr.head.sha + '/check-runs').catch(() => ({check_runs:[]}))
+        ]);
+        const statusRows = Array.isArray(results[0].statuses) ? results[0].statuses : [];
+        const checkRows = Array.isArray(results[1].check_runs) ? results[1].check_runs : [];
+        const allRows = statusRows.map(x => ({name:x.context || 'Commit status',state:x.state,detail:x.description || '',url:x.target_url || ''}))
+          .concat(checkRows.map(x => ({name:x.name || 'GitHub Action',state:x.conclusion || x.status,detail:(x.output && (x.output.title || x.output.summary)) || x.status || '',url:x.html_url || ''})));
+        if (!allRows.length) {
+          setState('checksState','checksDetail','No checks reported','No GitHub Actions or Netlify preview checks found for this commit.','wait');
         } else {
-          const bad = rows.some(x => x.state === 'failure' || x.state === 'error');
-          const pending = rows.some(x => x.state === 'pending');
-          setState('checksState','checksDetail',bad?'A check failed':pending?'Checks pending':'Reported checks passed',rows.length + ' status item(s) · ' + status.state,bad?'bad':pending?'wait':'ok');
+          const bad = allRows.some(x => ['failure','error','cancelled','timed_out','action_required'].includes(x.state));
+          const pending = allRows.some(x => ['pending','queued','in_progress'].includes(x.state));
+          setState('checksState','checksDetail',bad?'A check failed':pending?'Checks pending':'Reported checks passed',allRows.length + ' check item(s) · ' + (results[0].state || 'GitHub Actions'),bad?'bad':pending?'wait':'ok');
           const list = document.createElement('div');
-          rows.forEach(item => {
+          allRows.forEach(item => {
             const line = document.createElement('div'); line.className='history';
-            const title = document.createElement('b'); title.textContent = (item.context || 'Status') + ' · ' + item.state;
-            const detail = document.createElement('div'); detail.className='small'; detail.textContent = item.description || '';
+            const title = document.createElement('b'); title.textContent = item.name + ' · ' + item.state;
+            const detail = document.createElement('div'); detail.className='small'; detail.textContent = item.detail;
             line.append(title,detail);
-            if (item.target_url) { const link=document.createElement('a'); link.href=item.target_url; link.target='_blank'; link.rel='noopener'; link.textContent='Open check'; line.append(document.createTextNode(' '),link); }
+            if (item.url) { const link=document.createElement('a'); link.href=item.url; link.target='_blank'; link.rel='noopener'; link.textContent='Open check'; line.append(document.createTextNode(' '),link); }
             list.append(line);
           });
           $('checkList').append(list);
