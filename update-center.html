@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#061434">
+  <title>GSG AI UPDATE CENTER</title>
+  <style>
+    :root{color-scheme:dark;--bg:#040b1c;--panel:#0b1b3d;--line:rgba(126,174,255,.18);--blue:#2f7bff;--sky:#5cc8ff;--text:#eaf2ff;--muted:#91a8d0;--green:#34d399;--amber:#fbbf24;--red:#fb7185}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(900px 500px at 100% 0,rgba(47,123,255,.2),transparent 60%),linear-gradient(180deg,#071331,var(--bg));color:var(--text);font:15px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+    main{width:min(1050px,100%);margin:auto;padding:24px 16px 60px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:22px}
+    a,.btn{color:var(--sky);text-decoration:none}.btn{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:8px 14px;border-radius:12px;border:1px solid var(--line);background:#10265a;color:var(--text);font-weight:700;cursor:pointer}
+    .hero,.card{background:rgba(11,27,61,.88);border:1px solid var(--line);border-radius:20px;padding:20px;margin:14px 0;box-shadow:0 18px 50px rgba(0,0,0,.18)}
+    .eyebrow{color:var(--sky);font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase}.hero h1{font-size:clamp(25px,5vw,38px);line-height:1.1;margin:8px 0}.muted,p{color:var(--muted)}h2{font-size:18px;margin:0 0 12px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+    .status{padding:14px;border:1px solid var(--line);border-radius:14px;background:rgba(4,11,28,.45)}.status strong{display:block;margin:4px 0}.pill{font-size:12px;font-weight:800;color:var(--amber)}.ok{color:var(--green)}.bad{color:var(--red)}
+    .actions{display:flex;gap:10px;flex-wrap:wrap}.notice{border-left:3px solid var(--amber);padding:10px 13px;background:rgba(251,191,36,.08);border-radius:8px;color:#fde68a}
+    input,textarea{width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);background:#061434;color:var(--text);font:inherit;margin:6px 0 12px}textarea{min-height:90px;resize:vertical}.history{padding:10px 0;border-bottom:1px solid var(--line);overflow-wrap:anywhere}.small{font-size:12px;color:var(--muted)}
+    button:disabled{opacity:.45;cursor:not-allowed}footer{margin-top:22px;color:var(--muted);font-size:12px}
+  </style>
+</head>
+<body>
+<main>
+  <div class="top"><a href="index.html">← Back to HAMDAN PERSONAL OS</a><span class="eyebrow">GSG WORKSHOP · CONTROL CENTER</span></div>
+  <section class="hero">
+    <div class="eyebrow">Protected release workflow</div>
+    <h1>GSG AI UPDATE CENTER</h1>
+    <p>Review the source connection, check that the live website responds, and create a local data backup before any future release.</p>
+    <div class="notice">Safety mode: this first version does not push code or deploy. Every real release must be reviewed and explicitly approved with ACCEPT before deployment.</div>
+  </section>
+  <section class="card">
+    <h2>Connection checks</h2>
+    <div class="grid">
+      <div class="status"><span class="small">GitHub repository</span><strong id="ghState">Checking…</strong><span class="small" id="ghDetail">hamdaangurey-commits/gsgworkshop · main</span></div>
+      <div class="status"><span class="small">Live Netlify website</span><strong id="siteState">Checking…</strong><span class="small" id="siteDetail">gsgworkshop.netlify.app</span></div>
+      <div class="status"><span class="small">Browser data backup</span><strong id="dataState">Checking…</strong><span class="small" id="dataDetail">localStorage key: hamdan_os_v1</span></div>
+    </div>
+    <div class="actions" style="margin-top:14px"><button class="btn" id="refresh">Refresh checks</button><button class="btn" id="backup">Download JSON backup</button></div>
+  </section>
+  <section class="card">
+    <h2>Release approval policy</h2>
+    <p>Before a future release can be deployed, the proposed code changes, tests, backup result and rollback plan must be shown here. You must then type <b>ACCEPT</b> for that specific release.</p>
+    <p class="small">AI analysis, authenticated GitHub writes, Netlify deploy controls and automatic rollback are not connected in this starter version. No GitHub token, Netlify token or AI secret is stored in this browser.</p>
+  </section>
+  <section class="card">
+    <h2>Approval audit notes</h2>
+    <p class="muted">This log is stored separately from your finance data. Adding a note here does not deploy or change the app.</p>
+    <label for="proposal">Release / review note</label>
+    <textarea id="proposal" placeholder="Describe the release being reviewed…"></textarea>
+    <label for="approval">Type ACCEPT to record your review</label>
+    <input id="approval" autocomplete="off" placeholder="ACCEPT">
+    <div class="actions"><button class="btn" id="record">Record approval note</button></div>
+    <div id="history" style="margin-top:14px"></div>
+  </section>
+  <footer>HAMDAN PERSONAL OS · GSG AI UPDATE CENTER · Your financial data remains under the existing browser backup system.</footer>
+</main>
+<script>
+(() => {
+  'use strict';
+  const DATA_KEY = 'hamdan_os_v1';
+  const HISTORY_KEY = 'gsg_update_center_history_v1';
+  const $ = id => document.getElementById(id);
+  if (localStorage.getItem('hamdan_os_session') !== '1' && sessionStorage.getItem('hamdan_os_session') !== '1') {
+    location.replace('index.html'); return;
+  }
+  function setState(id, detailId, text, detail, cls) {
+    $(id).textContent = text; $(id).className = cls || '';
+    $(detailId).textContent = detail;
+  }
+  async function checks() {
+    setState('ghState','ghDetail','Checking…','Public GitHub API');
+    setState('siteState','siteDetail','Checking…','Public website response');
+    const tasks = [
+      fetch('https://api.github.com/repos/hamdaangurey-commits/gsgworkshop/commits/main',{headers:{Accept:'application/vnd.github+json'}})
+        .then(async r => { if(!r.ok) throw new Error('HTTP '+r.status); const d=await r.json(); setState('ghState','ghDetail','Connected · '+d.sha.slice(0,7),d.commit.message.split('\n')[0],'ok'); })
+        .catch(e => setState('ghState','ghDetail','Unavailable',e.message,'bad')),
+      fetch('https://gsgworkshop.netlify.app/',{cache:'no-store'})
+        .then(r => { if(!r.ok) throw new Error('HTTP '+r.status); setState('siteState','siteDetail','Website reachable','HTTP '+r.status+' · This does not expose deployment history.','ok'); })
+        .catch(e => setState('siteState','siteDetail','Could not verify',e.message,'bad'))
+    ];
+    const raw=localStorage.getItem(DATA_KEY);
+    try {
+      if(!raw) throw new Error('No saved finance data found in this browser');
+      const data=JSON.parse(raw);
+      setState('dataState','dataDetail','Backup ready',Array.isArray(data.transactions)?data.transactions.length+' transactions · '+(Array.isArray(data.accounts)?data.accounts.length:0)+' accounts':'Data key exists','ok');
+    } catch(e) { setState('dataState','dataDetail','Check needed',e.message,'bad'); }
+    await Promise.allSettled(tasks);
+  }
+  function downloadBackup() {
+    const raw=localStorage.getItem(DATA_KEY);
+    if(!raw) { alert('No HAMDAN data found in this browser.'); return; }
+    let data;
+    try { data=JSON.parse(raw); } catch { alert('Saved data is not valid JSON.'); return; }
+    const payload={app:'HAMDAN PERSONAL OS',exportedAt:new Date().toISOString(),data};
+    const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+    const url=URL.createObjectURL(blob), a=document.createElement('a');
+    a.href=url; a.download='hamdan-os-backup-'+new Date().toISOString().slice(0,10)+'.json';
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),1500);
+  }
+  function history() {
+    let items=[]; try { items=JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]'); } catch {}
+    $('history').innerHTML=items.length?items.map(x=>'<div class="history"><b>'+new Date(x.at).toLocaleString()+'</b><div>'+String(x.note).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))+'</div><span class="small">ACCEPT recorded · no deployment performed</span></div>').join(''):'<p class="small">No approval notes recorded.</p>';
+  }
+  $('refresh').addEventListener('click',checks);
+  $('backup').addEventListener('click',downloadBackup);
+  $('record').addEventListener('click',()=>{
+    const note=$('proposal').value.trim();
+    if(!note){alert('Add a review note first.');return;}
+    if($('approval').value.trim()!=='ACCEPT'){alert('Type ACCEPT exactly to record your approval.');return;}
+    let items=[];try{items=JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]')}catch{}
+    items.unshift({at:new Date().toISOString(),note});
+    localStorage.setItem(HISTORY_KEY,JSON.stringify(items.slice(0,50)));
+    $('proposal').value='';$('approval').value='';history();
+    alert('Approval note recorded. No code was pushed and no deployment was started.');
+  });
+  checks(); history();
+})();
+</script>
+</body>
+</html>
